@@ -48,13 +48,6 @@ public class PersistenceTest {
         return sqlSessionFactory;
     }
 
-    public PersistenceTest() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-    
     
     @Test
     public void TestOne(){

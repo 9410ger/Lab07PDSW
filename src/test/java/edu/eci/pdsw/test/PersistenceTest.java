@@ -93,8 +93,9 @@ public class PersistenceTest {
         PacienteMapper pm= sqlss.getMapper(PacienteMapper.class);
         Paciente p = new Paciente(9876, "TI", "Carmenzo", Date.valueOf("1995-07-10"));
         pm.insertPaciente(p);
+        Paciente test=pm.loadPacienteById(p.getId(), p.getTipo_id());
         sqlss.close();
-        Assert.assertEquals(pm.loadPacienteById(p.getId(), p.getTipo_id()).toString(),p.toString());
+        Assert.assertEquals(test.toString(),p.toString());
     }
     
     @Test
@@ -112,6 +113,7 @@ public class PersistenceTest {
             pm.insertConsulta(c, p1.getId(), p1.getTipo_id());
         }
         Paciente test=pm.loadPacienteById(p1.getId(), p1.getTipo_id());
+        sqlss.close();
         LinkedList<String> cadenas=new LinkedList<>();
         boolean funciona=p1.getId()==test.getId() && p1.getTipo_id().equals(test.getTipo_id()) && p1.getNombre().equals(test.getNombre()) && p1.getFechaNacimiento().equals(test.getFechaNacimiento());
         for(Consulta c:test.getConsultas()){

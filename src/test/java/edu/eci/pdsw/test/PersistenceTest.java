@@ -27,7 +27,13 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.eci.pdsw.samples.mybatis.mappers.PacienteMapper;
-
+import java.sql.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import edu.eci.pdsw.samples.entities.Paciente;
+import edu.eci.pdsw.samples.entities.Consulta;
+import java.util.Set;
+import org.junit.Assert;
 /**
  *
  * @author hcadavid
@@ -49,13 +55,37 @@ public class PersistenceTest {
     }
 
     
-    @Test
-    public void TestOne(){
+    /*@Test
+    public void CE1(){
         SqlSessionFactory sessionfact = getSqlSessionFactory();
-
-        SqlSession sqlss = sessionfact.openSession();
-
         
+        SqlSession sqlss = sessionfact.openSession();
+        PacienteMapper pm= sqlss.getMapper(PacienteMapper.class);
+        //Deberia registrar paciente nuevo con mas de una consulta
+        Paciente p4 = new Paciente(1234567890,"TI","Pepito Perez",Date.valueOf("1996-07-09"));
+        Consulta c5 = new Consulta(Date.valueOf("2009-10-12"),"El paciente tiene fiebre");
+        Consulta c6 = new Consulta(Date.valueOf("2009-10-13"),"El paciente sigue con fiebre");
+        Set<Consulta> consultas4=new HashSet<>();
+        consultas4.add(c5);consultas4.add(c6);
+        p4.setConsultas(consultas4);
+        pm.insertPaciente(p4);
+        for(Consulta c: p4.getConsultas()){
+            pm.insertConsulta(c, p4.getId(), p4.getTipo_id());
+        }  
+    }*/
+    
+    @Test
+    public void CE2(){
+        SqlSessionFactory sessionfact = getSqlSessionFactory();
+        SqlSession sqlss = sessionfact.openSession();
+        PacienteMapper pm= sqlss.getMapper(PacienteMapper.class);
+        Paciente p = new Paciente(9876, "TI", "Carmenzo", Date.valueOf("1995-07-10"));
+        pm.insertPaciente(p);
+        sqlss.close();
+        Assert.assertEquals(pm.loadPacienteById(p.getId(), p.getTipo_id()).toString(),p.toString());
     }
+        
+        
+    
     
 }

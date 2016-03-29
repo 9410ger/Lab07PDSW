@@ -28,7 +28,7 @@
         insert into PACIENTES values (#{paciente.id},#{paciente.tipo_id},#{paciente.nombre},#{paciente.fechaNacimiento})
     </insert>
     
-     <insert id='insertConsulta' parameterType='map'>
+     <insert id='insertConsulta' parameterType='map' useGeneratedKeys='true' keyProperty='consulta.id'>
         insert into CONSULTAS (fecha_y_hora, resumen, PACIENTES_id,PACIENTES_tipo_id) values (#{consulta.fechayHora},#{consulta.resumen},#{idPaciente},#{tipoIdPaciente})
     </insert>   
      

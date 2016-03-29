@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import edu.eci.pdsw.samples.entities.Paciente;
 import edu.eci.pdsw.samples.entities.Consulta;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import org.junit.Assert;
 /**
@@ -55,7 +56,7 @@ public class PersistenceTest {
     }
 
     
-    /*@Test
+    @Test
     public void CE1(){
         SqlSessionFactory sessionfact = getSqlSessionFactory();
         
@@ -71,8 +72,19 @@ public class PersistenceTest {
         pm.insertPaciente(p4);
         for(Consulta c: p4.getConsultas()){
             pm.insertConsulta(c, p4.getId(), p4.getTipo_id());
-        }  
-    }*/
+        }
+        Paciente test=pm.loadPacienteById(p4.getId(), p4.getTipo_id());
+        LinkedList<String> cadenas=new LinkedList<>();
+        boolean funciona=p4.getId()==test.getId() && p4.getTipo_id().equals(test.getTipo_id()) && p4.getNombre().equals(test.getNombre()) && p4.getFechaNacimiento().equals(test.getFechaNacimiento());
+        for(Consulta c:test.getConsultas()){
+            cadenas.add(c.toString().split(",")[1]+c.toString().split(",")[2]);
+        }
+        for(Consulta c:p4.getConsultas()){
+            funciona= funciona && cadenas.contains(c.toString().split(",")[1]+c.toString().split(",")[2]);
+        }
+        Assert.assertTrue(funciona);
+        
+    }
     
     @Test
     public void CE2(){
@@ -84,7 +96,32 @@ public class PersistenceTest {
         sqlss.close();
         Assert.assertEquals(pm.loadPacienteById(p.getId(), p.getTipo_id()).toString(),p.toString());
     }
-        
+    
+    @Test
+    public void CE3(){
+        SqlSessionFactory sessionfact = getSqlSessionFactory();
+        SqlSession sqlss = sessionfact.openSession();
+        PacienteMapper pm= sqlss.getMapper(PacienteMapper.class);
+        Paciente p1=new Paciente(123,"CC","German Lopez",new Date(1994,10,10));
+        Consulta c1=new Consulta(new Date(2016,1,13),"El paciente presenta fiebre alta");
+        Set<Consulta> consultas=new LinkedHashSet<Consulta>();
+        consultas.add(c1);
+        p1.setConsultas(consultas);
+        pm.insertPaciente(p1);
+        for(Consulta c: p1.getConsultas()){
+            pm.insertConsulta(c, p1.getId(), p1.getTipo_id());
+        }
+        Paciente test=pm.loadPacienteById(p1.getId(), p1.getTipo_id());
+        LinkedList<String> cadenas=new LinkedList<>();
+        boolean funciona=p1.getId()==test.getId() && p1.getTipo_id().equals(test.getTipo_id()) && p1.getNombre().equals(test.getNombre()) && p1.getFechaNacimiento().equals(test.getFechaNacimiento());
+        for(Consulta c:test.getConsultas()){
+            cadenas.add(c.toString().split(",")[1]+c.toString().split(",")[2]);
+        }
+        for(Consulta c:p1.getConsultas()){
+            funciona= funciona && cadenas.contains(c.toString().split(",")[1]+c.toString().split(",")[2]);
+        }
+        Assert.assertTrue(funciona);
+    }
         
     
     
